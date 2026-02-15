@@ -65,7 +65,7 @@ func main() {
 	serverMux.HandleFunc("POST /admin/reset", apiCfg.handlerReset)
 	serverMux.HandleFunc("POST /api/users", apiCfg.handlerCreateUser)
 	serverMux.HandleFunc("POST /api/chirps", apiCfg.handlerCreateChirp)
-
+	serverMux.HandleFunc("GET /api/chirps", apiCfg.handlerGetAllChirps)
 	// start the server
 	err = newServer.ListenAndServe()
 	if err != nil {
@@ -99,6 +99,7 @@ func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte(line))
 }
 
+// reset user table, only "dev" has permission
 func (cfg *apiConfig) handlerReset(w http.ResponseWriter, req *http.Request) {
 	// check if it is a dev
 	if cfg.platform != "dev" {
