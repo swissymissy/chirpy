@@ -42,37 +42,6 @@ func handlerValidateChirp(w http.ResponseWriter, req *http.Request) {
 	respondWithJSON(w, 200, res)
 }
 
-// helper funcs
-func respondWithError( w http.ResponseWriter, code int, msg string) {
-	type returnWithErr struct {
-		Error string `json:"error"`
-	}
-
-	res := returnWithErr{
-		Error: msg,
-	}
-	data, err := json.Marshal(res)
-	if err != nil {
-		log.Printf("Error encoding msg to json: %s", err)
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	w.Write(data)
-}
-
-func respondWithJSON( w http.ResponseWriter, code int, payload interface{}) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	
-	//encode to json bytes
-	data, err := json.Marshal(payload)
-	if err != nil {
-		log.Printf("Error encoding payload to json: %s", err)
-		return
-	}
-	w.Write(data)
-}
-
 // cleaner functions
 func cleanerString(msg string) string {
 	split_msg := strings.Fields(msg) 
