@@ -63,8 +63,8 @@ func main() {
 	serverMux.Handle("/app/", apiCfg.middlewareMetricsInc(http.StripPrefix("/app",handler)))
 	serverMux.HandleFunc("GET /admin/metrics", apiCfg.handlerMetrics)
 	serverMux.HandleFunc("POST /admin/reset", apiCfg.handlerReset)
-	serverMux.HandleFunc("POST /api/validate_chirp", handlerValidateChirp)
 	serverMux.HandleFunc("POST /api/users", apiCfg.handlerCreateUser)
+	serverMux.HandleFunc("POST /api/chirps", apiCfg.handlerCreateChirp)
 
 	// start the server
 	err = newServer.ListenAndServe()

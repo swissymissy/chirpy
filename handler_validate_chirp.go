@@ -1,45 +1,25 @@
 package main 
 
 import (
-	"encoding/json"
-	"net/http"
-	"log"
+	"fmt"
 	"strings"
 )
 
 
-func handlerValidateChirp(w http.ResponseWriter, req *http.Request) {
-	type parameters struct {
-		Body string `json:"body"`
-	}
+func ValidateChirp(chrpmsg *chirpMsg) error{
+	
 	// response struct for valid case
 	type returnValid struct {
 		Cleaned string `json:"cleaned_body"`
 	}
 
-	// decode body req into json bytes
-	decoder := json.NewDecoder(req.Body)
-	var params parameters
-	err := decoder.Decode(&params)	// write to params after decoding
-	if err != nil {
-		log.Printf("Error decoding parameters: %s", err)
-		msg := "Something went wrong"
-		respondWithError(w, 500, msg )
-		return
-	}
-
 	// handle error case
-	if len(params.Body) > 140 {
-		msg := "Chirp is too long"
-		respondWithError(w, 400, msg)
-		return
+	if len(chrpmsg.Body) > 140 {
+		return fmt.Errorf("Chirp message is too long")
 	} 
 	
-	cleaned_res := cleanerString(params.Body)
-	res := returnValid{
-		Cleaned: cleaned_res,
-	}
-	respondWithJSON(w, 200, res)
+	chrpmsg.Body = cleanerString(chrpmsg.Body)
+	return nil
 }
 
 // cleaner functions
