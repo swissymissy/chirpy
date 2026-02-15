@@ -16,6 +16,7 @@ import (
 type apiConfig struct {
 	fileserverHits atomic.Int32
 	DB 	*database.Queries
+	platform string 		// check if is dev
 }
 
 
@@ -23,6 +24,7 @@ func main() {
 	
 	godotenv.Load()							// Load the .env file into enviroment variables
 	dbURL := os.Getenv("DB_URL") 			// get the db_url from the environment
+	platform := os.Getenv("PLATFORM")		// get PLATFORM value
 	db, err := sql.Open("postgres", dbURL)	// open a connection to the database
 	if err != nil {
 		fmt.Println("Error connecting with database")
@@ -34,6 +36,7 @@ func main() {
 	apiCfg := apiConfig{
 		fileserverHits: atomic.Int32{},
 		DB: dbQueries,
+		platform: platform,
 	}
 
 	// create new server mux
@@ -97,6 +100,18 @@ func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, req *http.Request) {
 }
 
 func (cfg *apiConfig) handlerReset(w http.ResponseWriter, req *http.Request) {
-	cfg.fileserverHits.Store(0)
+	// check if it is a dev
+	if cfg.platform != "dev" {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+	
+	err := cfg.DB.ResetUsers(req.Context())
+	if err != nil {
+		fmt.Printf("Error reseting users table in db: %v\n", err)
+		msg := "Something went wrong"
+		respondWithError(w, 500, msg)
+		return
+	}
 	w.WriteHeader(200)
 }
