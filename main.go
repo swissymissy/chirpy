@@ -66,6 +66,8 @@ func main() {
 	serverMux.HandleFunc("POST /api/users", apiCfg.handlerCreateUser)
 	serverMux.HandleFunc("POST /api/chirps", apiCfg.handlerCreateChirp)
 	serverMux.HandleFunc("GET /api/chirps", apiCfg.handlerGetAllChirps)
+	serverMux.HandleFunc("GET /api/chirps/{chirpID}", apiCfg.handlerGetAChirp)
+	
 	// start the server
 	err = newServer.ListenAndServe()
 	if err != nil {
