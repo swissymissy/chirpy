@@ -10,7 +10,8 @@ import (
 func MakeRefreshToken() (string, error) {
 	// generate a random 256 bits of random data
 	data := make([]byte, 32)
-	data = rand.Read(data)
+	rand.Read(data)		// fill values into 'data'
+	
 
 	// convert the byte slice into hex string
 	hexString := hex.EncodeToString(data)
