@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-
+// function to make sure the chirp message length not too long and censor bad words
 func ValidateChirp(chrpmsg *chirpMsg) error{
 	
 	// response struct for valid case

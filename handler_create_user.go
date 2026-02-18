@@ -7,6 +7,8 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/swissymissy/chirpy/internal/auth"
+	"github.com/swissymissy/chirpy/internal/database"
 )
 
 
@@ -19,13 +21,14 @@ type User struct {
 
 func (apicfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
 	
-	type reqEmail struct {
+	type reqEmailPwd struct {
+		Password string `json:"password"`
 		Email	string 	`json:"email"`
 	}
 
 	// decode body req into json bytes
 	decoder := json.NewDecoder(r.Body)
-	var rE reqEmail
+	var rE reqEmailPwd
 	err := decoder.Decode(&rE)
 	if err != nil {
 		fmt.Printf("Error decoding body request: %s", err)
@@ -34,8 +37,22 @@ func (apicfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	// inserting user to db
-	newUsr, err := apicfg.DB.CreateUser(r.Context(), rE.Email)
+	// hash password
+	pwd := rE.Password
+	hashed_pwd, err := auth.HashPassword(pwd)
+	if err != nil {
+		fmt.Print("Error hashing password: %s", err)
+		respondWithError(w, 500, "Something went wrong")
+		return
+	}
+
+	// create user params
+	userParams := database.CreateUserParams{
+		Email: rE.Email,
+		HashedPassword: hashed_pwd,
+	}
+	// inserting user email and hashed password to db
+	newUsr, err := apicfg.DB.CreateUser(r.Context(), userParams)
 	if err != nil {
 		fmt.Printf("Error creating new user in db: %s", err)
 		msg := "Something went wrong"

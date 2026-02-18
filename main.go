@@ -17,6 +17,7 @@ type apiConfig struct {
 	fileserverHits atomic.Int32
 	DB 	*database.Queries
 	platform string 		// check if is dev
+	jwt_secret string 		
 }
 
 
@@ -25,6 +26,7 @@ func main() {
 	godotenv.Load()							// Load the .env file into enviroment variables
 	dbURL := os.Getenv("DB_URL") 			// get the db_url from the environment
 	platform := os.Getenv("PLATFORM")		// get PLATFORM value
+	jwt_secret := os.Getenv("JWT_SECRET")	// get JWT_SECRET from env
 	db, err := sql.Open("postgres", dbURL)	// open a connection to the database
 	if err != nil {
 		fmt.Println("Error connecting with database")
@@ -37,6 +39,7 @@ func main() {
 		fileserverHits: atomic.Int32{},
 		DB: dbQueries,
 		platform: platform,
+		jwt_secret: jwt_secret,
 	}
 
 	// create new server mux
@@ -67,6 +70,7 @@ func main() {
 	serverMux.HandleFunc("POST /api/chirps", apiCfg.handlerCreateChirp)
 	serverMux.HandleFunc("GET /api/chirps", apiCfg.handlerGetAllChirps)
 	serverMux.HandleFunc("GET /api/chirps/{chirpID}", apiCfg.handlerGetAChirp)
+	serverMux.HandleFunc("POST /api/login", apiCfg.handlerUserLogin)
 	
 	// start the server
 	err = newServer.ListenAndServe()

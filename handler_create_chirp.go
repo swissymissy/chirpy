@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/swissymissy/chirpy/internal/database"
+	"github.com/swissymissy/chirpy/internal/auth"
 )
 
 type chirpMsg struct {
@@ -37,6 +38,24 @@ func (apicfg *apiConfig) handlerCreateChirp(w http.ResponseWriter, r *http.Reque
 		return
 	}	
 	
+	// get the token from request body
+	token, err := auth.GetBearerToken(r.Header) 
+	if err != nil {
+		fmt.Printf("Error getting token from header: %s", err)
+		msg := "Invalid token"
+		respondWithError(w, 401, msg)
+		return
+	}
+
+	// validate the token
+	userId, err := auth.ValidateJWT(token, apicfg.jwt_secret)
+	if err != nil {
+		fmt.Printf("Invalid token: %w\n", err)
+		msg := "Invalid token"
+		respondWithError(w, 401, msg)
+		return
+	}
+
 	// validate the repsonse body
 	err = ValidateChirp(&chrpmsg)
 	if err != nil {
@@ -49,7 +68,7 @@ func (apicfg *apiConfig) handlerCreateChirp(w http.ResponseWriter, r *http.Reque
 	// create ChirpParams
 	cp := database.CreateChirpParams{
 		Body: chrpmsg.Body,
-		UserID: chrpmsg.UserID,
+		UserID: userId,
 	}
 	// create new chirp msg in db
 	newChirp, err := apicfg.DB.CreateChirp(r.Context(), cp)
