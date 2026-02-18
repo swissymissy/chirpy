@@ -8,7 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// function used for creating jwt for a user
+// function used for creating access token jwt for a user
 func MakeJWT(userID uuid.UUID, tokenSecret string) (string, error) {
 
 	// create the Claims object
