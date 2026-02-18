@@ -9,13 +9,13 @@ import (
 )
 
 // function used for creating jwt for a user
-func MakeJWT(userID uuid.UUID, tokenSecret string, expiresIn time.Duration) (string, error) {
+func MakeJWT(userID uuid.UUID, tokenSecret string) (string, error) {
 
 	// create the Claims object
 	claims := jwt.RegisteredClaims{
 		Issuer: "chirpy-access",
 		IssuedAt: jwt.NewNumericDate(time.Now().UTC()),
-		ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(expiresIn)),
+		ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(time.Hour)),			// token will expire in 1 hour
 		Subject: userID.String(),
 	}
 
