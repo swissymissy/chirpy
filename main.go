@@ -74,6 +74,7 @@ func main() {
 	serverMux.HandleFunc("POST /api/refresh", apiCfg.handlerRefreshToken)
 	serverMux.HandleFunc("POST /api/revoke", apiCfg.handlerRevokeToken)
 	serverMux.HandleFunc("PUT /api/users", apiCfg.handlerEditUser)
+	serverMux.HandleFunc("DELETE /api/chirps/{chirpID}", apiCfg.handlerDeleteChirp)
 	
 	// start the server
 	err = newServer.ListenAndServe()
