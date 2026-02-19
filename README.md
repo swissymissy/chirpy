@@ -40,16 +40,16 @@ Some API endpoints that the server can handle:
 - `GET /admin/metrics` : Show how many times Chirpy has been visited
 - `GET /api/chirps` : Get list of chirps in ascending order. It also accepts query parameters such as `author_id` to get chirps of a specific user, or `sort` to reorder the list.
 - GET /api/chirps/{chirpID}` : Get information of a chirp by its ID
-2.**POST**
+2. **POST**
 - `POST /api/users` : Create new user
 - `POST /api/chirps` : Create new chirp
 - `POST /api/login` : Authenticate user logging in
 - `POST /api/refresh` : Check user's refresh token and access token
 - `POST /api/revoke` : Update "revoked" status of user's refresh token
 - `POST /api/polka/webhooks` : handle communication with third-party server
-3.**PUT**
+3. **PUT**
 - `PUT /api/users` : Let authorized user change their password and email
-4.**DELETE**
+4. **DELETE**
 - `DELETE /api/chirps/{chirpID}` : Let authorized user delete their posted chirp
 ### Safety Feature
 This API endpoint is built with a gatekeeper PLATFORM="dev" in `.env` because it is a reset database endpoint. Treat carefully. Returns `403 Forbidden` if PLATFORM is not set to `"dev"`.
