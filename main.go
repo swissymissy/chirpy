@@ -68,18 +68,18 @@ func main() {
 	serverMux.HandleFunc("GET /api/healthz", handlehealthz)	// server's readiness check
 	serverMux.Handle("/app/", apiCfg.middlewareMetricsInc(http.StripPrefix("/app",handler)))
 	serverMux.HandleFunc("GET /admin/metrics", apiCfg.handlerMetrics)
+	serverMux.HandleFunc("GET /api/chirps", apiCfg.handlerGetAllChirps)
+	serverMux.HandleFunc("GET /api/chirps/{chirpID}", apiCfg.handlerGetAChirp)
 	serverMux.HandleFunc("POST /admin/reset", apiCfg.handlerReset)
 	serverMux.HandleFunc("POST /api/users", apiCfg.handlerCreateUser)
 	serverMux.HandleFunc("POST /api/chirps", apiCfg.handlerCreateChirp)
-	serverMux.HandleFunc("GET /api/chirps", apiCfg.handlerGetAllChirps)
-	serverMux.HandleFunc("GET /api/chirps/{chirpID}", apiCfg.handlerGetAChirp)
 	serverMux.HandleFunc("POST /api/login", apiCfg.handlerUserLogin)
 	serverMux.HandleFunc("POST /api/refresh", apiCfg.handlerRefreshToken)
 	serverMux.HandleFunc("POST /api/revoke", apiCfg.handlerRevokeToken)
+	serverMux.HandleFunc("POST /api/polka/webhooks", apiCfg.handlerWebhooks)
 	serverMux.HandleFunc("PUT /api/users", apiCfg.handlerEditUser)
 	serverMux.HandleFunc("DELETE /api/chirps/{chirpID}", apiCfg.handlerDeleteChirp)
-	serverMux.HandleFunc("POST /api/polka/webhooks", apiCfg.handlerWebhooks)
-	
+
 	// start the server
 	err = newServer.ListenAndServe()
 	if err != nil {
