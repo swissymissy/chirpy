@@ -1,15 +1,27 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"encoding/json"
 	
 	"github.com/google/uuid"
+	"github.com/swissymissy/chirpy/internal/auth"
 )
 
-
+// function used for communitcating with third-party server: Polka
 func (apicfg *apiConfig) handlerWebhooks(w http.ResponseWriter, r *http.Request) {
+	// validate the API key
+	apiKey, err := auth.GetAPIKey(r.Header) 
+	if err != nil {
+		w.WriteHeader(401)
+		return
+	}
+	
+	if apiKey != apicfg.polkaKey {
+		w.WriteHeader(401)
+		return
+	}
+
 	type WebhookEvent struct {
 		Event string 	`json:"event"`
 		Data  struct {
@@ -20,11 +32,9 @@ func (apicfg *apiConfig) handlerWebhooks(w http.ResponseWriter, r *http.Request)
 	//decode the request body
 	decoder := json.NewDecoder(r.Body)
 	var data WebhookEvent
-	err := decoder.Decode(&data)
+	err = decoder.Decode(&data)
 	if err != nil {
-		fmt.Printf("Error decoding body request: %s", err)
-		msg := "Something went wrong"
-		respondWithError(w, 500, msg )
+		w.WriteHeader(500)
 		return
 	}
 

@@ -17,7 +17,8 @@ type apiConfig struct {
 	fileserverHits atomic.Int32
 	DB 	*database.Queries
 	platform string 		// check if is dev
-	jwt_secret string 		
+	jwt_secret string 	
+	polkaKey   string	
 }
 
 
@@ -27,6 +28,7 @@ func main() {
 	dbURL := os.Getenv("DB_URL") 			// get the db_url from the environment
 	platform := os.Getenv("PLATFORM")		// get PLATFORM value
 	jwt_secret := os.Getenv("JWT_SECRET")	// get JWT_SECRET from env
+	polkaKey := os.Getenv("POLKA_KEY")		// load POLKA KEY in
 	db, err := sql.Open("postgres", dbURL)	// open a connection to the database
 	if err != nil {
 		fmt.Println("Error connecting with database")
@@ -40,6 +42,7 @@ func main() {
 		DB: dbQueries,
 		platform: platform,
 		jwt_secret: jwt_secret,
+		polkaKey: polkaKey,
 	}
 
 	// create new server mux
