@@ -39,7 +39,7 @@ Some API endpoints that the server can handle:
 - `GET /api/healthz` : Check server's health
 - `GET /admin/metrics` : Show how many times Chirpy has been visited
 - `GET /api/chirps` : Get list of chirps in ascending order. It also accepts query parameters such as `author_id` to get chirps of a specific user, or `sort` to reorder the list.
-- GET /api/chirps/{chirpID}` : Get information of a chirp by its ID
+- `GET /api/chirps/{chirpID}` : Get information of a chirp by its ID
 2. **POST**
 - `POST /api/users` : Create new user
 - `POST /api/chirps` : Create new chirp
