@@ -75,6 +75,7 @@ func main() {
 	serverMux.HandleFunc("POST /api/revoke", apiCfg.handlerRevokeToken)
 	serverMux.HandleFunc("PUT /api/users", apiCfg.handlerEditUser)
 	serverMux.HandleFunc("DELETE /api/chirps/{chirpID}", apiCfg.handlerDeleteChirp)
+	serverMux.HandleFunc("POST /api/polka/webhooks", apiCfg.handlerWebhooks)
 	
 	// start the server
 	err = newServer.ListenAndServe()
