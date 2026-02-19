@@ -14,17 +14,17 @@ Chirpy is a RESTful API and backend server built with Go. It allows users to cre
 1. **Clone the repository**
 `git clone https://github.com/swissymissy/chirpy.git`
 2. **Configure environment variables**
-Create a new `.env` file and add it to `.gitignore`. The `.env` file has these  important variables:
+Create a new `.env` file and add it to `.gitignore`. The `.env` file has these variables:
 ```
-PORT=8080
 DB_URL=postgres://user:password@localhost:5432/chirpy?sslmode=disable
 JWT_SECRET=your_super_secret_key_here
 PLATFORM="dev"
+POLKA_KEY: <third-party API key>
 ```
-- PORT: Default port is set to 8080, but you can change to the port you want
 - DB_URL: The connection string to the database. In this project we use Postgres
 - JWT_SECRET: The secret key for your server to generate JWT token for user
 - PLATFORM: Set to "dev" to enable development-only endpoints. If omitted, the server defaults to a secure state where administrative resets are disabled
+- POLKA_KEY: An API key used to authenticate incoming webhooks from the Polka payment service. 
 ## Usage
 **Compile and run**
 ```
