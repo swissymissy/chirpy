@@ -7,7 +7,7 @@ import (
 	"github.com/swissymissy/chirpy/internal/auth"
 )
 
-
+// function used for updating the revoked status of user's refresh token
 func (apicfg *apiConfig) handlerRevokeToken( w http.ResponseWriter, r *http.Request) {
 	// check for refresh token in header
 	refreshToken, err := auth.GetBearerToken(r.Header)
